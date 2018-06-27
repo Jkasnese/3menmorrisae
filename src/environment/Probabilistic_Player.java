@@ -14,10 +14,6 @@ public class Probabilistic_Player extends Player {
 		return 0;
 	}
 
-	@Override
-	public String generate_play() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 }

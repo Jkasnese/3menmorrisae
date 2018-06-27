@@ -1,9 +1,9 @@
 package environment;
 
 public abstract class Player {
-	protected int[] pieces;
+	private static int id;
 	protected String[] plays;
-	protected Game game;
+	protected int playerId;
 	
 	
 	/***
@@ -16,6 +16,10 @@ public abstract class Player {
 	
 	public abstract int put_pieces ();
 	public abstract void getNextPlay(char[] board);
+
+	public int getId() {
+		return this.playerId;
+	}
 	
 }
 

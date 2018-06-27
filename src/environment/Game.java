@@ -1,5 +1,7 @@
 package environment;
 
+import java.util.Arrays;
+
 public class Game {
 	private Player player_one;
 	private Player player_two;
@@ -11,7 +13,7 @@ public class Game {
 
 	public Game(Player player_x, Player player_y){
 		this.player_one = player_x;
-		this.player_two = player.y;
+		this.player_two = player_y;
 		this.board = new char[9];
 		Arrays.fill(board, '0');
 	}
@@ -36,7 +38,7 @@ public class Game {
 		This function is used to swap board, so that players always see their stones as 1 and adversary stones as 2.
 		This saves representation positions on the 
 	***/
-	public swap_board(){
+	public void swap_board(){
 		for (int i=0; i<9; i++){
 			if (this.board[i] == '1')
 				this.board[i] = '2';
@@ -65,9 +67,9 @@ public class Game {
 		return -1;
 	} 
 	
-	// Sortear quem começa
-	// Retornar quem foi o ganhador.  Função recebe o id de cada jogador e retorna -1 se nenhum deles ganhou OK
-	// Jogo já acabou (vetor de char board) boolean OK
+	// Sortear quem comeï¿½a
+	// Retornar quem foi o ganhador.  Funï¿½ï¿½o recebe o id de cada jogador e retorna -1 se nenhum deles ganhou OK
+	// Jogo jï¿½ acabou (vetor de char board) boolean OK
 	// Passar a vez pro coleguinha, limite de jogadas = 100, OK
 	// Swap (onde tem 2 bota 1 onde 1 bota 2) 
 }
