@@ -97,7 +97,47 @@ public class Representation {
 	
 	    // Add the single position with the empty board.
 	    position = add_board_to_map(empty_board, position);
-	
+
+    	// Add all possibilities for putting stones phase.
+	    for (int i=0; i<9; i++){
+		    Arrays.fill(board, '0');
+		    board[i] = '2';
+		    position = add_board_to_map(board, position);
+		    for(int j=0; j<9; j++) {
+		    	if (i == j) {continue;}
+		    	else {
+		    		board[j] = '1';
+		    		position = add_board_to_map(board, position);
+		    		for(int k=0; k<9;k++) {
+		    			if (k == i || k==j) {continue;}
+		    			else {
+		    				board[k] = '2';
+		    				position = add_board_to_map(board, position);
+		    				for(int l=0; l<9;l++) {
+		    					if (l==k || l==j || l==i) {continue;}
+		    					else {
+			    					board[l] = '1';
+			    					position = add_board_to_map(board, position);
+			    					for(int m=0; m<9; m++) {
+			    						if (m == l || m==k || m==j || m==i) {continue;}
+			    						else {
+			    							board[m] = '2';
+			    							position = add_board_to_map(board, position);
+			    							board[m] = '0';
+			    						}
+			    					}
+			    					board[l] = '0';
+		    					}
+		    				}
+		    				board[k] = '0';
+		    			}
+		    		}
+		    		board[j] = '0';
+		    	}
+		    }
+	    }
+	    System.out.println(position);
+	    
 		// Add all possibilities for 6 stones
 	    for (int i=0; i<9; i++){
 		    Arrays.fill(board, '0');
