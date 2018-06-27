@@ -15,7 +15,7 @@ public abstract class Player {
 	public abstract int evaluate_table ();
 	
 	public abstract int put_pieces ();
-	public abstract String generate_play ();
+	public abstract void getNextPlay(char[] board);
 	
 }
 
