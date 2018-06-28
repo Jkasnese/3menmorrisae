@@ -2,9 +2,15 @@ package environment;
 
 public abstract class Player {
 	private static int id;
-	protected String[] plays;
+	protected ArrayList<String> plays;
 	protected int playerId;
 	
+
+	public Player (){
+		this.playerId = Player.id;
+		Player.id++;
+		this.plays = Mutation.generatePlays();
+	}
 	
 	/***
 	 * This function receives a table and evaluate it.
