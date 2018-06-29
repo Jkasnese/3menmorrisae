@@ -16,14 +16,12 @@ public class Mutation {
 		 ***/		
 		int i = 0;
 
-		System.out.println("Putting pieces on table!");
 		for (i=0; i<335; i++){
 			futurePlay = representation.getPosition(i);
 			futurePlay = putPiece(futurePlay);
 			plays.add(futurePlay);
 		}
 		
-		System.out.println("Moving pieces!");
 		for (i=335; i<564; i++){
 			futurePlay = representation.getPosition(i);
 			futurePlay = movePiece(futurePlay);
@@ -180,7 +178,8 @@ public class Mutation {
 		int[] pieces = new int[3];
 		int piece;
 		
-		for (int i=0; i<9; i++){ // Search for the player`s pieces, add them to array
+		// Search for the player`s pieces, add them to array
+		for (int i=0; i<9; i++){ 
 			if (board[i] == '1'){
 				pieces[pieces_found] = i;
 				pieces_found++;
@@ -192,10 +191,11 @@ public class Mutation {
 		// Random select which piece to move. Raffle again if piece is stuck;
         piece = pieces[random.nextInt(3)];
 	    move = raffleMove(piece, board);
-    	piece = 0;
+		int i = 0;
 	    while (move == -1) {
+			piece = pieces[i];
 	    	move = raffleMove(piece, board);
-	    	piece++;
+	    	i++;
     	}
 
 		// Plays the move

@@ -28,11 +28,11 @@ public class Game {
 		int i = 0;
 		for(i=0; i<3; i++) {
 			// Checa vertical
-			if(this.board[i] == this.board[i+3] && this.board[i+3] == this.board[i+6]) {return true;}
+			if(this.board[i] == this.board[i+3] && this.board[i+3] == this.board[i+6] && this.board[i] != '0') {return true;}
 		}
 		
 		for(i=0; i<7; i+= 3) {
-				if(this.board[i] == this.board[i+1] && this.board[i+1] == this.board[i+2]){return true;}
+				if(this.board[i] == this.board[i+1] && this.board[i+1] == this.board[i+2] && this.board[i] != '0'){return true;}
 		}
 		return false;
 	}
@@ -42,12 +42,14 @@ public class Game {
 		This saves representation positions on the 
 	***/
 	public void swap_board(){
+		System.out.println("Entrada swap: " + new String(this.board));
 		for (int i=0; i<9; i++){
 			if (this.board[i] == '1')
 				this.board[i] = '2';
 			else if (this.board[i] == '2')
 				this.board[i] = '1';				
 		}
+		System.out.println("Saida swap: " + new String(this.board));
 	}
 
 	/***
@@ -58,14 +60,22 @@ public class Game {
 		If game isnt over, swap the board and give it to the other player.
 	***/
 	public int play(){
-		for (int i=0; i<NUMBER_OF_PLAYS; i++){
-			this.player_one.getNextPlay(this.representation, this.board);
+		for (int i=0; i<Game.NUMBER_OF_PLAYS; i++){
+			System.out.println("Jogada jogador 1");
+			String newBoard = this.player_one.getNextPlay(this.representation, this.board);
+			this.board = newBoard.toCharArray();
 			if (this.is_game_finished()) {return this.player_one.getId();}
 			swap_board();
 
-			this.player_two.getNextPlay(this.representation, this.board);
+			System.out.println(new String(this.board));
+
+			System.out.println("Jogada jogador 2");
+			newBoard = this.player_two.getNextPlay(this.representation, this.board);
+			this.board = newBoard.toCharArray();
 			if (this.is_game_finished()) {return this.player_two.getId();}
 			swap_board();
+
+			System.out.println(new String(this.board));
 		}
 		return -1;
 	} 

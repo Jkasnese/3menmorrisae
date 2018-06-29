@@ -8,7 +8,7 @@ import java.util.Map;
 public class Representation {
 	
     // Create hash map to contain all possibilities
-    private Map<String,Integer> all_possibilities = new HashMap<String,Integer>(19684, (float)1.0);
+    private Map<String,Integer> all_possibilities = new HashMap<String,Integer>(4100, (float)1.0);
 
     // Array that maps each index to a board position
     private ArrayList<String> positions_decode = new ArrayList<String>();
@@ -202,6 +202,9 @@ public class Representation {
 		    	}
 		    }
 	    }
+	    System.out.println(this.all_possibilities.size());
+	    System.out.println(this.positions_decode.size());
+	    System.out.println(position);
 	}
 }
 

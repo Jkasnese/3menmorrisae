@@ -57,7 +57,14 @@ public class ArrayPlayer extends Player {
 		
 		// Check current position definitive representation index
 		int playIndex = representation.getIndex(currentBoard);
-		
+
+		System.out.println("Indice da jogada eh: " + playIndex);
+		System.out.println("Posicao do tabuleiro eh: " + representation.getPosition(playIndex));		
+
+		String nextPlay = this.playbook.get(playIndex);
+
+		System.out.println("Proxima jogada eh: " + nextPlay);
+
 		// Get next play from player`s playbook from previous index
 		return this.playbook.get(playIndex);
 	}
