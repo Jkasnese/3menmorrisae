@@ -8,10 +8,29 @@ import java.util.Map;
 public class Representation {
 	
     // Create hash map to contain all possibilities
-    public Map<String,Integer> all_possibilities = new HashMap<String,Integer>(19684, (float)1.0);
+    private Map<String,Integer> all_possibilities = new HashMap<String,Integer>(19684, (float)1.0);
 
     // Array that maps each index to a board position
-    public ArrayList<String> positions_decode = new ArrayList<String>();
+    private ArrayList<String> positions_decode = new ArrayList<String>();
+    
+    /***
+     * Method to access hashmap and receive a index corresponding to the players playbook
+     * TODO: overcharge method to acept both string or char array
+     * @param String board
+     * @return int index
+     */
+    public int getIndex(String board) {
+    	return this.all_possibilities.get(board).intValue();
+    }
+    
+    /***
+     * Method to access arraylists with board original positions and receive a index corresponding to that position
+     * @param String board
+     * @return int index
+     */
+    public String getPosition(int i) {
+    	return this.positions_decode.get(i);
+    }
     
 	public static char[] rotate_right (char[] table) {
 		char[] transformed_table = new char[9];
@@ -136,9 +155,8 @@ public class Representation {
 		    	}
 		    }
 	    }
-	    System.out.println(position);
-	    
-		// Add all possibilities for 6 stones
+
+	    // Add all possibilities for 6 stones
 	    for (int i=0; i<9; i++){
 		    Arrays.fill(board, '0');
 		    board[i] = '2';
@@ -184,17 +202,7 @@ public class Representation {
 		    	}
 		    }
 	    }
-	    
-	    // Debug info
-        System.out.println(position);
-        for (int i=0; i<564; i++) {
-        	System.out.println(this.positions_decode.get(i));
-        }
-        
-	    // Write hashmap and arraylist to a file to be read in trainings.
-        
 	}
-	
 }
 
 /**

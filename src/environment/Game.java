@@ -3,6 +3,8 @@ package environment;
 import java.util.Arrays;
 
 public class Game {
+	private Representation representation;
+	
 	private Player player_one;
 	private Player player_two;
 	
@@ -11,7 +13,8 @@ public class Game {
 	// Number of plays for each player
 	private static int NUMBER_OF_PLAYS = 50;
 
-	public Game(Player player_x, Player player_y){
+	public Game(Player player_x, Player player_y, Representation representation){
+		this.representation = representation;
 		this.player_one = player_x;
 		this.player_two = player_y;
 		this.board = new char[9];
@@ -56,11 +59,11 @@ public class Game {
 	***/
 	public int play(){
 		for (int i=0; i<NUMBER_OF_PLAYS; i++){
-			this.player_one.getNextPlay(this.board);
+			this.player_one.getNextPlay(this.representation, this.board);
 			if (this.is_game_finished()) {return this.player_one.getId();}
 			swap_board();
 
-			this.player_two.getNextPlay(this.board);
+			this.player_two.getNextPlay(this.representation, this.board);
 			if (this.is_game_finished()) {return this.player_two.getId();}
 			swap_board();
 		}
