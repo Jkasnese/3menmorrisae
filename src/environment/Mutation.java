@@ -176,39 +176,33 @@ public class Mutation {
 	
 	public static String movePiece(String position){
 		char[] board = position.toCharArray();
-		int pieces_found = 0;
-		int[] pieces = new int[3];
-		int piece;
+		ArrayList<Integer> pieces = new ArrayList<Integer>();
 		
 		// Search for the player`s pieces, add them to array
 		for (int i=0; i<9; i++){ 
 			if (board[i] == '1'){
-				pieces[pieces_found] = i;
-				pieces_found++;
+				pieces.add(new Integer(i));
 			}
 		}
 
 		int move;
+		int pieceLocation;
+		int freePieces = 3;
+		// Random select which piece to move. If piece is stuck, remove it from available pieces and raffle again
+		do {
+			// Get the location of the piece to move
+	        pieceLocation = pieces.get(random.nextInt(freePieces)).intValue();
+	        pieces.remove(freePieces);
+	        freePieces--;
+	        
+	        // Try to move piece
+		    move = raffleMove(pieceLocation, board);
+    	} while (move == -1); 
 		
-		// Random select which piece to move. Raffle again if piece is stuck;
-        piece = pieces[random.nextInt(3)];
-	    move = raffleMove(piece, board);
-		int i = 0;
-	    System.out.println(new String(board));
-	    
-		while (move == -1 && i < 3) {
-	    	piece = pieces[i];
-	    	move = raffleMove(piece, board);
-	    	i++;
-    	}
-		
-		// If all pieces are stuck, the board stays the same.
-		if(i != 3) {
-			// Plays the move
-			board[piece] = '0';
-			board[move] = '1';
-		}
-		
+		// Plays the move
+		board[pieceLocation] = '0';
+		board[move] = '1';
+
 		// Returns the new board with the move
 		return (new String(board));
 	}
