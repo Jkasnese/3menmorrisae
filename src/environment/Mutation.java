@@ -172,6 +172,8 @@ public class Mutation {
 		return -1;
 	}
 	
+	
+	
 	public static String movePiece(String position){
 		char[] board = position.toCharArray();
 		int pieces_found = 0;
@@ -192,15 +194,20 @@ public class Mutation {
         piece = pieces[random.nextInt(3)];
 	    move = raffleMove(piece, board);
 		int i = 0;
-	    while (move == -1) {
-			piece = pieces[i];
+	    System.out.println(new String(board));
+	    
+		while (move == -1 && i < 3) {
+	    	piece = pieces[i];
 	    	move = raffleMove(piece, board);
 	    	i++;
     	}
-
-		// Plays the move
-		board[piece] = '0';
-		board[move] = '1';
+		
+		// If all pieces are stuck, the board stays the same.
+		if(i != 3) {
+			// Plays the move
+			board[piece] = '0';
+			board[move] = '1';
+		}
 		
 		// Returns the new board with the move
 		return (new String(board));

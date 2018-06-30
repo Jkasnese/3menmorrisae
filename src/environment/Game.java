@@ -34,6 +34,7 @@ public class Game {
 		for(i=0; i<7; i+= 3) {
 				if(this.board[i] == this.board[i+1] && this.board[i+1] == this.board[i+2] && this.board[i] != '0'){return true;}
 		}
+		
 		return false;
 	}
 
