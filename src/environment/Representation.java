@@ -155,6 +155,7 @@ public class Representation {
 		    	}
 		    }
 	    }
+	    System.out.println("Number of possible plays before 6 pieces on the board: " + position);
 
 	    // Add all possibilities for 6 stones
 	    for (int i=0; i<9; i++){
@@ -202,9 +203,8 @@ public class Representation {
 		    	}
 		    }
 	    }
-	    System.out.println(this.all_possibilities.size());
-	    System.out.println(this.positions_decode.size());
-	    System.out.println(position);
+	    System.out.println("Total number of board repeated board combinations: " + this.all_possibilities.size());
+	    System.out.println("Total number of plays: " + position);
 	}
 }
 

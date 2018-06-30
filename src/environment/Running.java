@@ -8,7 +8,7 @@ public class Running {
 	// Environment variables
     private static int POPULATION_SIZE = 100;
     private static double ALLOWED_BREED = 0.4; // Parents percentage
-    private static int NUMBER_OF_GENERATIONS = 1000000;
+    private static int NUMBER_OF_GENERATIONS = 1000;
     private static double MUTATION_RATE = 0.1; // Mutation percentage
     
     // Tourney definitions
@@ -38,20 +38,20 @@ public class Running {
         System.out.println("Generating benchmark player");
         Player opponent = new ArrayPlayer(representation);
         
-        for (int i=0; i<1 /*Running.NUMBER_OF_GENERATIONS*/; i++) {
+        for (int i=0; i<Running.NUMBER_OF_GENERATIONS; i++) {
         	
         	// EVALUATION METRICS
     		int MAX_FITNESS = 0;
     		double AVG_FITNESS = 0;
 
         	// Each player plays in a tourney. The ALLOWED_BREED% best breed.
-        	for (int j=0; j<1/*Running.POPULATION_SIZE*/; j++) {
+        	for (int j=0; j<Running.POPULATION_SIZE; j++) {
         		Player tourneyPlayer = players.get(j);
         		tourneyPlayer.setFitness(0); // Reset fitness from previous tourneys
         		
         		// Select opponents and play games to evaluate fitness;
         		int newFitness = 0;
-        		for (int k=0; k<1 /*Running.OPPONENTS_AMOUNT*/; k++) {
+        		for (int k=0; k<Running.OPPONENTS_AMOUNT; k++) {
         			// Player opponent = players.get(random.nextInt(Running.POPULATION_SIZE)); uncomment this line to coevolutive
         			Game game = new Game(tourneyPlayer, opponent, representation);
         			System.out.println("Playing game " + k);

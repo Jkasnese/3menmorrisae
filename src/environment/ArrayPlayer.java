@@ -16,6 +16,14 @@ public class ArrayPlayer extends Player {
 		this.playbook = Mutation.generatePlays(representation);
 	}
 	
+	/***
+	 * Breeding function. Because parentOne is determined by fitness, he is guaranteed at least half the genes.
+	 * @param representation
+	 * @param parentOne
+	 * @param parentTwo
+	 * @param mutationRate
+	 * @param random
+	 */
 	public ArrayPlayer (Representation representation, ArrayPlayer parentOne, ArrayPlayer parentTwo, double mutationRate, Random random) {
 		this.playerId = Player.id;
 		Player.id++;
@@ -23,7 +31,7 @@ public class ArrayPlayer extends Player {
 		this.playbook = parentOne.getPlaybook();
 		
 		// 564 positions on the playbook. Raffle how many from parentTwo:
-		int genesFromTwo = random.nextInt(564) + 1;
+		int genesFromTwo = random.nextInt(282) + 1;
 		
 		// Raffle which genes will come from parentTwo:
 		for (int i=0; i<genesFromTwo; i++) {

@@ -16,13 +16,13 @@ public class Mutation {
 		 ***/		
 		int i = 0;
 
-		for (i=0; i<335; i++){
+		for (i=0; i<336; i++){
 			futurePlay = representation.getPosition(i);
 			futurePlay = putPiece(futurePlay);
 			plays.add(futurePlay);
 		}
 		
-		for (i=335; i<564; i++){
+		for (i=336; i<564; i++){
 			futurePlay = representation.getPosition(i);
 			futurePlay = movePiece(futurePlay);
 			plays.add(futurePlay);
@@ -31,7 +31,7 @@ public class Mutation {
 	}
 	
 	public static String generatePlay(Representation representation, int index) {
-		if (index < 335) {
+		if (index < 336) {
 			return putPiece(representation.getPosition(index));
 		} else {
 			return movePiece(representation.getPosition(index));
@@ -175,6 +175,7 @@ public class Mutation {
 	
 	
 	public static String movePiece(String position){
+		System.out.println("Tabuleiro para mover peca eh: " + position);
 		char[] board = position.toCharArray();
 		ArrayList<Integer> pieces = new ArrayList<Integer>();
 		
@@ -190,14 +191,27 @@ public class Mutation {
 		int freePieces = 3;
 		// Random select which piece to move. If piece is stuck, remove it from available pieces and raffle again
 		do {
+			// Raffle which piece to move
+			int pieceToMove = random.nextInt(freePieces);
+			
+			System.out.println("Peca sorteada foi a: " + pieceToMove);
+			
 			// Get the location of the piece to move
-	        pieceLocation = pieces.get(random.nextInt(freePieces)).intValue();
-	        pieces.remove(freePieces);
+	        pieceLocation = pieces.get(pieceToMove).intValue();
+	        
+	        // Removes the piece, since already tried to move it.
+	        pieces.remove(pieceToMove);
 	        freePieces--;
 	        
 	        // Try to move piece
 		    move = raffleMove(pieceLocation, board);
-    	} while (move == -1); 
+		    
+    	} while (move == -1 && freePieces != 0);
+		
+		// Checks if no available moves. If so, player lost.
+		if (freePieces == 0 && move == -1) {
+			return (new String("LOST"));
+		}
 		
 		// Plays the move
 		board[pieceLocation] = '0';

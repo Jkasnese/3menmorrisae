@@ -28,11 +28,13 @@ public class Game {
 		int i = 0;
 		for(i=0; i<3; i++) {
 			// Checa vertical
-			if(this.board[i] == this.board[i+3] && this.board[i+3] == this.board[i+6] && this.board[i] != '0') {return true;}
+			if(this.board[i] == this.board[i+3] && this.board[i+3] == this.board[i+6] && this.board[i] != '0')
+				return true;
 		}
 		
 		for(i=0; i<7; i+= 3) {
-				if(this.board[i] == this.board[i+1] && this.board[i+1] == this.board[i+2] && this.board[i] != '0'){return true;}
+				if(this.board[i] == this.board[i+1] && this.board[i+1] == this.board[i+2] && this.board[i] != '0')
+					return true;
 		}
 		
 		return false;
@@ -52,7 +54,8 @@ public class Game {
 		}
 		System.out.println("Saida swap: " + new String(this.board));
 	}
-
+	
+	
 	/***
 		This function plays the game.
 		Max number of plays is defined in the class.
@@ -64,16 +67,36 @@ public class Game {
 		for (int i=0; i<Game.NUMBER_OF_PLAYS; i++){
 			System.out.println("Jogada jogador 1");
 			String newBoard = this.player_one.getNextPlay(this.representation, this.board);
+			
+			// If he has no available plays, he lost.
+			if (newBoard.equals(new String("LOST")))
+				return this.player_two.getId();
+			
+			// Else, update board.
 			this.board = newBoard.toCharArray();
-			if (this.is_game_finished()) {return this.player_one.getId();}
+			
+			// Checks if he won
+			if (this.is_game_finished()) 
+				return this.player_one.getId();
+			
 			swap_board();
 
 			System.out.println(new String(this.board));
 
 			System.out.println("Jogada jogador 2");
 			newBoard = this.player_two.getNextPlay(this.representation, this.board);
+			
+			// If he has no available plays, he lost.
+			if (newBoard.equals(new String("LOST")))
+				return this.player_one.getId();
+			
+			// Else, update board.
 			this.board = newBoard.toCharArray();
-			if (this.is_game_finished()) {return this.player_two.getId();}
+			
+			// Checks if he won
+			if (this.is_game_finished()) 
+				return this.player_two.getId();
+			
 			swap_board();
 
 			System.out.println(new String(this.board));
