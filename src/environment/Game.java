@@ -45,14 +45,12 @@ public class Game {
 		This saves representation positions on the 
 	***/
 	public void swap_board(){
-		System.out.println("Entrada swap: " + new String(this.board));
 		for (int i=0; i<9; i++){
 			if (this.board[i] == '1')
 				this.board[i] = '2';
 			else if (this.board[i] == '2')
 				this.board[i] = '1';				
 		}
-		System.out.println("Saida swap: " + new String(this.board));
 	}
 	
 	
@@ -64,8 +62,9 @@ public class Game {
 		If game isnt over, swap the board and give it to the other player.
 	***/
 	public int play(){
+		//System.out.println("Jogo entre jogador " + this.player_one.getId() + " e " + this.player_two.getId());
 		for (int i=0; i<Game.NUMBER_OF_PLAYS; i++){
-			System.out.println("Jogada jogador 1");
+			//System.out.println("Jogada jogador 1");
 			String newBoard = this.player_one.getNextPlay(this.representation, this.board);
 			
 			// If he has no available plays, he lost.
@@ -79,11 +78,11 @@ public class Game {
 			if (this.is_game_finished()) 
 				return this.player_one.getId();
 			
+			//System.out.println(new String(this.board));
+			
 			swap_board();
 
-			System.out.println(new String(this.board));
-
-			System.out.println("Jogada jogador 2");
+			//System.out.println("Jogada jogador 2");
 			newBoard = this.player_two.getNextPlay(this.representation, this.board);
 			
 			// If he has no available plays, he lost.
@@ -96,10 +95,10 @@ public class Game {
 			// Checks if he won
 			if (this.is_game_finished()) 
 				return this.player_two.getId();
+
+			//System.out.println(new String(this.board));
 			
 			swap_board();
-
-			System.out.println(new String(this.board));
 		}
 		return -1;
 	} 

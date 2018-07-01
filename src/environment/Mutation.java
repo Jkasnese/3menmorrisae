@@ -175,7 +175,6 @@ public class Mutation {
 	
 	
 	public static String movePiece(String position){
-		System.out.println("Tabuleiro para mover peca eh: " + position);
 		char[] board = position.toCharArray();
 		ArrayList<Integer> pieces = new ArrayList<Integer>();
 		
@@ -194,7 +193,6 @@ public class Mutation {
 			// Raffle which piece to move
 			int pieceToMove = random.nextInt(freePieces);
 			
-			System.out.println("Peca sorteada foi a: " + pieceToMove);
 			
 			// Get the location of the piece to move
 	        pieceLocation = pieces.get(pieceToMove).intValue();

@@ -28,7 +28,7 @@ public class ArrayPlayer extends Player {
 		this.playerId = Player.id;
 		Player.id++;
 	
-		this.playbook = parentOne.getPlaybook();
+		this.playbook = new ArrayList<String>(parentOne.getPlaybook());
 		
 		// 564 positions on the playbook. Raffle how many from parentTwo:
 		int genesFromTwo = random.nextInt(282) + 1;
@@ -66,12 +66,7 @@ public class ArrayPlayer extends Player {
 		// Check current position definitive representation index
 		int playIndex = representation.getIndex(currentBoard);
 
-		System.out.println("Indice da jogada eh: " + playIndex);
-		System.out.println("Posicao do tabuleiro eh: " + representation.getPosition(playIndex));		
-
 		String nextPlay = this.playbook.get(playIndex);
-
-		System.out.println("Proxima jogada eh: " + nextPlay);
 
 		// Get next play from player`s playbook from previous index
 		return this.playbook.get(playIndex);
@@ -81,10 +76,10 @@ public class ArrayPlayer extends Player {
 	public int compareTo(Object opponent) {
 		opponent = (Player) opponent;
 		if (this.getFitness() > ((Player) opponent).getFitness()) {
-			return 1;
+			return -1;
 		}
 		else if (this.getFitness() < ((Player) opponent).getFitness() ) {
-			return -1;
+			return 1;
 		} else {
 			return 0;
 		}
