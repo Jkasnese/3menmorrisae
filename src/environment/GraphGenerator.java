@@ -23,6 +23,7 @@ public class GraphGenerator extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private final XYSeries max_fit_series, avg_fit_series;
 	private XYSeriesCollection data;
+	private final JFreeChart graph;
 	
 	public GraphGenerator(String title) {
 		super(title);
@@ -39,7 +40,6 @@ public class GraphGenerator extends JFrame{
 			this.avg_fit_series.add(x, y);
 	}
 	
-
 	
 	public void generate_graph() {
 		
@@ -47,7 +47,7 @@ public class GraphGenerator extends JFrame{
 		data.addSeries(avg_fit_series);
 		data.addSeries(max_fit_series);
 		
-		final JFreeChart graph = ChartFactory.createXYLineChart("", "Generations", "Fitness", data, PlotOrientation.VERTICAL, true, true, false);
+		this.graph = ChartFactory.createXYLineChart("", "Generations", "Fitness", data, PlotOrientation.VERTICAL, true, true, false);
 		
 		XYPlot plot = graph.getXYPlot();
 		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
@@ -70,5 +70,12 @@ public class GraphGenerator extends JFrame{
 	}
 	
 	
+
+	public void save_png_file(String file_name){
+
+		OutputStream file = new FileOutputStream(file_name + ".png");
+		ChartUtilities.writeChartAsPNG(file, graph, 950, 800);
+		fos.close();
+	}
 
 }

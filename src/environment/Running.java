@@ -11,17 +11,23 @@ public class Running {
     private static double ALLOWED_BREED = 0.20; // Parents percentage
     private static int NUMBER_OF_GENERATIONS = 100;
     private static double MUTATION_RATE = 0.1; // Mutation percentage
+    private static Random random = new Random();
     
+
+
     // Tourney definitions
     private static int OPPONENTS_AMOUNT = 100; // Plays an opponent twice. Putting first piece/not putting first piece.
     private static int WIN_POINTS = 3;
     private static int DRAW_POINTS = 1;
     private static int LOSE_POINTS = 0;
-    
-    private static Random random = new Random();
+
+     
+    // Persistance variables 
+    private static String file_name = new String("");
     private static GraphGenerator graph_generator = new GraphGenerator("Avg Fitness x Generations");
 
 	public static void main(String[] args) {
+
 
         // Generate the board/position representations
 		Representation representation = new Representation();
@@ -123,6 +129,7 @@ public class Running {
         graph_generator.generate_graph();
         graph_generator.pack();
         graph_generator.setVisible(true);
+        graph_generator.save_png_file(file_name + "P" + Running.POPULATION_SIZE + "A" + Running.ALLOWED_BREED + "G" + Running.NUMBER_OF_GENERATIONS + "M" + Running.MUTATION_RATE + "OP" + Running.OPPONENTS_AMOUNT);
         
 	} // Main end
 } // Class end
