@@ -2,28 +2,28 @@ package environment;
 
 
 import java.awt.Color;
-import java.awt.Stroke;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.swing.JFrame;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame;
-
-import com.sun.prism.BasicStroke;
 
 public class GraphGenerator extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private final XYSeries max_fit_series, avg_fit_series;
 	private XYSeriesCollection data;
-	private final JFreeChart graph;
+	private JFreeChart graph;
 	
 	public GraphGenerator(String title) {
 		super(title);
@@ -73,9 +73,14 @@ public class GraphGenerator extends JFrame{
 
 	public void save_png_file(String file_name){
 
-		OutputStream file = new FileOutputStream(file_name + ".png");
-		ChartUtilities.writeChartAsPNG(file, graph, 950, 800);
-		fos.close();
+		try {
+			OutputStream file = new FileOutputStream(file_name + ".png");
+			ChartUtilities.writeChartAsPNG(file, graph, 1200, 900);
+			file.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 	}
 
 }
