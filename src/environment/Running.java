@@ -9,8 +9,8 @@ public class Running {
 	// Environment variables
     private static int POPULATION_SIZE = 100;
     private static double ALLOWED_BREED = 0.20; // Parents percentage
-    private static int NUMBER_OF_GENERATIONS = 100;
-    private static double MUTATION_RATE = 0.1; // Mutation percentage
+    private static int NUMBER_OF_GENERATIONS = 1000;
+    private static double MUTATION_RATE = 0.5; // Mutation percentage
     
     // Tourney definitions
     private static int OPPONENTS_AMOUNT = 100; // Plays an opponent twice. Putting first piece/not putting first piece.
@@ -19,7 +19,7 @@ public class Running {
     private static int LOSE_POINTS = 0;
     
     private static Random random = new Random();
-    private static GraphGenerator graph_generator = new GraphGenerator("Avg Fitness x Generations");
+    private static GraphGenerator graph_generator = new GraphGenerator("Fitness x Generations");
 
 	public static void main(String[] args) {
 
@@ -45,6 +45,10 @@ public class Running {
         
         // BEGINING OF GENERATIONS
         for (int i=0; i<Running.NUMBER_OF_GENERATIONS; i++) {
+        	
+        	if (i%(Running.NUMBER_OF_GENERATIONS/10) == 0) {
+        		System.out.println("Geracao: " + i);
+        	}
         	
         	// EVALUATION METRICS
     		int MAX_FITNESS = 0;
