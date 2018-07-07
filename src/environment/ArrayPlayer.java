@@ -1,14 +1,20 @@
 package environment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
 /***
 	Player that has all possible board configurations and the play to it.
 ***/
-public class ArrayPlayer extends Player {
+public class ArrayPlayer extends Player implements Serializable {
 
 	private ArrayList<String> playbook;
+	
+	public ArrayPlayer () {
+		this.playerId = Player.id;
+		Player.id++;
+	}
 
 	public ArrayPlayer (Representation representation){
 		this.playerId = Player.id;
@@ -48,7 +54,7 @@ public class ArrayPlayer extends Player {
 	}
 	
 
-	private ArrayList<String> getPlaybook() {
+	public ArrayList<String> getPlaybook() {
 		return this.playbook;
 	}
 

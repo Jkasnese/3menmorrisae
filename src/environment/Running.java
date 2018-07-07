@@ -1,5 +1,11 @@
 package environment;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -8,9 +14,9 @@ public class Running {
 
 	// Environment variables
     private static int POPULATION_SIZE = 100;
-    private static double ALLOWED_BREED = 0.20; // Parents percentage
-    private static int NUMBER_OF_GENERATIONS = 1000;
-    private static double MUTATION_RATE = 0.5; // Mutation percentage
+    private static double ALLOWED_BREED = 0.30; // Parents percentage
+    private static int NUMBER_OF_GENERATIONS = 2000;
+    private static double MUTATION_RATE = 0.1; // Mutation percentage
     private static Random random = new Random();
     
 
@@ -26,7 +32,7 @@ public class Running {
     private static String file_name = new String("");
     private static GraphGenerator graph_generator = new GraphGenerator("Avg Fitness x Generations");
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         // OBJECTS
         // Generate the board/position representations
@@ -44,20 +50,26 @@ public class Running {
             opponents.add(new ArrayPlayer(representation));
         }
 
+        // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
+        // File to output oponents.
+        /*
+        FileOutputStream opponentsFile = new FileOutputStream("opponents.ser");
+        ObjectOutputStream out = new ObjectOutputStream(opponentsFile);
+        int opponentsWritten = 0;
+        */
+        
         // Uncomment for evolved opponents:
         FileInputStream opponentsIn = new FileInputStream("opponents.ser");
         ObjectInputStream in = new ObjectInputStream(opponentsIn);
 
-        while(!EOF){
-            try {
-                e = (ArrayPlayer) in.readObject();
-                opponents.add(e);    
-            } catch{
-                
+        try {
+            ArrayPlayer e;
+			while( (e= (ArrayPlayer)in.readObject()) != null) {
+            	opponents.add(e);
             }
-            
+        } catch (IOException ioex){
+        	ioex.printStackTrace();
         }
-
 
 
         // Generate first generation        
@@ -66,10 +78,6 @@ public class Running {
             players.add(new ArrayPlayer(representation));
         }
 
-        // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */:
-        // File to output oponents.
-        FileOutputStream opponentsFile = new FileOutputStream("opponents.ser");
-        ObjectOutputStream out = new ObjectOutputStream(opponentsFile);
 
 
 
@@ -79,9 +87,6 @@ public class Running {
 
         for (int i=0; i<Running.NUMBER_OF_GENERATIONS; i++) {
         	
-        	if (i%(Running.NUMBER_OF_GENERATIONS/10) == 0) {
-        		System.out.println("Geracao: " + i);
-        	}
         	
         	// EVALUATION METRICS
     		int MAX_FITNESS = 0;
@@ -180,15 +185,23 @@ public class Running {
     		// After everyone played their games, sort based on fitness and breed the best.
     		players.sort(null);
 
-            // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */:
-            // ops determine the number of opponents of a generation to be saved
-            for (int ops = 0; ops < 5; ops++){
-                try{
-                    out.writeObject(players.get(ops));
-                } catch (IOException i){
-                    i.printStackTrace();
-                }
-            }
+    		
+        	if (i%(Running.NUMBER_OF_GENERATIONS/20) == 0) {
+        		System.out.println("Geracao: " + i);
+                // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
+        		/*
+        		// ops determine the number of opponents of a generation to be saved
+                for (int ops = 0; ops < 5; ops++){
+                    try{
+                        out.writeObject(players.get(ops));
+                        opponentsWritten++;
+                    } catch (IOException ioex){
+                        ioex.printStackTrace();
+                    }
+                }*/
+        	}
+    		
+
 
     		
     		graph_generator.add_value((double) i, MAX_FITNESS, 0);
@@ -206,14 +219,15 @@ public class Running {
     			if (parent > allowedToBreed -1)
     				parent = 0;
     		}
-    		int aefaef=0;
-    		aefaef++;
         } // Generations loop end
         
-        // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */:
+        // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
+        /*
+        System.out.println("Opponents written: " + opponentsWritten);
         out.close();
         opponentsFile.close();
-
+        */
+        
         graph_generator.generate_graph();
         graph_generator.pack();
         graph_generator.setVisible(true);
