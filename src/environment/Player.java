@@ -7,6 +7,9 @@ public abstract class Player implements Comparable {
 	protected ArrayList<String> plays;
 	protected int playerId;
 	private int fitness;
+	protected int wins;
+	protected int draws;
+	protected int losses;
 	
 	public abstract String getNextPlay(Representation representation, char[] board);
 
