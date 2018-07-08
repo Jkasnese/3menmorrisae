@@ -1,5 +1,12 @@
 package environment;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -24,8 +31,11 @@ public class Running {
      
     // Persistance variables 
     private static String file_name = new String("");
-    private static GraphGenerator graph_generator = new GraphGenerator("Avg Fitness x Generations");
-
+    private static GraphGenerator fitnessGraph = new GraphGenerator("Fitness x Generations");
+    private static GraphGenerator statsGraph = new GraphGenerator("Statistics x Generations");
+    private static boolean fitGraphClosed = false;
+	private static boolean statsGraphClosed = false;
+    
 	public static void main(String[] args) {
 
         // OBJECTS
@@ -43,21 +53,17 @@ public class Running {
         for (int i=0; i<Running.OPPONENTS_AMOUNT; i++){
             opponents.add(new ArrayPlayer(representation));
         }
-
-        // Uncomment for evolved opponents:
-        FileInputStream opponentsIn = new FileInputStream("opponents.ser");
-        ObjectInputStream in = new ObjectInputStream(opponentsIn);
-
-        while(!EOF){
-            try {
-                e = (ArrayPlayer) in.readObject();
-                opponents.add(e);    
-            } catch{
-                
-            }
-            
-        }
-
+      
+        // Create XYSeries for graphs:
+        fitnessGraph.createSeries("Max Fitness");
+        fitnessGraph.createSeries("Average Fitness");
+        statsGraph.createSeries("Average Wins");
+        statsGraph.createSeries("Average Draws");
+        statsGraph.createSeries("Average Losses");
+        statsGraph.createSeries("Best Player's Wins");
+        statsGraph.createSeries("Best Player's Draws");
+        statsGraph.createSeries("Best Player's Losses");
+        statsGraph.createSeries("Max Number of Wins");
 
 
         // Generate first generation        
@@ -65,12 +71,6 @@ public class Running {
         for (int i=0; i<Running.POPULATION_SIZE; i++){
             players.add(new ArrayPlayer(representation));
         }
-
-        // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */:
-        // File to output oponents.
-        FileOutputStream opponentsFile = new FileOutputStream("opponents.ser");
-        ObjectOutputStream out = new ObjectOutputStream(opponentsFile);
-
 
 
 
@@ -173,22 +173,16 @@ public class Running {
             avgDraws /= Running.POPULATION_SIZE;
             avgLosses /= Running.POPULATION_SIZE;
         	
+            
     		// After everyone played their games, sort based on fitness and breed the best.
     		players.sort(null);
 
-            // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */:
-            // ops determine the number of opponents of a generation to be saved
-            for (int ops = 0; ops < 5; ops++){
-                try{
-                    out.writeObject(players.get(ops));
-                } catch (IOException i){
-                    i.printStackTrace();
-                }
-            }
-
     		
-    		graph_generator.add_value((double) i, MAX_FITNESS, 0);
-    		graph_generator.add_value((double)i, AVG_FITNESS, 1);
+    		double[] fit_array = {MAX_FITNESS, AVG_FITNESS}; 
+    		fitnessGraph.addValue((double) i, fit_array);
+    	
+    		double[] stats_array = {avgWins, avgDraws, avgLosses, numWinsBestPlayer, numDrawsBestPlayer, numLossesBestPlayer, maxWins};
+    		statsGraph.addValue((double) i, stats_array);
     		
     		// Select %ALLOWED_BREED parents to breed and fill the remainder of the population
     		int parent = 0;
@@ -206,14 +200,52 @@ public class Running {
     		aefaef++;
         } // Generations loop end
         
-        // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */:
-        out.close();
-        opponentsFile.close();
-
-        graph_generator.generate_graph();
-        graph_generator.pack();
-        graph_generator.setVisible(true);
-        graph_generator.save_png_file(file_name + "P" + Running.POPULATION_SIZE + "A" + Running.ALLOWED_BREED + "G" + Running.NUMBER_OF_GENERATIONS + "M" + Running.MUTATION_RATE + "OP" + Running.OPPONENTS_AMOUNT);
+     
         
+        fitnessGraph.generateGraph("Fitness");
+        fitnessGraph.pack();
+        fitnessGraph.addWindowListener(new WindowAdapter() {
+        	@Override
+			public void windowClosing(WindowEvent e) {
+        		fitGraphClosed = true;
+        	}
+        });
+        fitnessGraph.setVisible(true);
+        
+        // Putting the thread to sleep for 2 seconds to avoid ConcurrentModificationException when trying to save graph
+        try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        
+        fitnessGraph.savePNGFile(file_name + "P" + Running.POPULATION_SIZE + "A" + Running.ALLOWED_BREED + "G" + Running.NUMBER_OF_GENERATIONS + "M" + Running.MUTATION_RATE + "OP" + Running.OPPONENTS_AMOUNT);
+        
+        statsGraph.generateGraph("Statistics");
+        statsGraph.pack();
+        statsGraph.addWindowListener(new WindowAdapter() {
+        	@Override
+			public void windowClosing(WindowEvent e) {
+        		statsGraphClosed = true;
+        	}
+        });
+        statsGraph.setVisible(true);
+        
+         try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        
+        statsGraph.savePNGFile(file_name + "Stats_" + "P" + Running.POPULATION_SIZE + "A" + Running.ALLOWED_BREED + "G" + Running.NUMBER_OF_GENERATIONS + "M" + Running.MUTATION_RATE + "OP" + Running.OPPONENTS_AMOUNT);
+       while(true) {
+    	   if(statsGraphClosed && fitGraphClosed) {
+    		   System.out.println("Ate mais e obrigado pelos peixes");
+    		   System.exit(0);
+    	   }
+       }
+       
+       
+       
 	} // Main end
 } // Class end
