@@ -3,6 +3,8 @@ package environment;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -15,8 +17,8 @@ public class Running {
 
 	// Environment variables
     private static int POPULATION_SIZE = 100;
-    private static double ALLOWED_BREED = 0.20; // Parents percentage
-    private static int NUMBER_OF_GENERATIONS = 100;
+    private static double ALLOWED_BREED = 0.30; // Parents percentage
+    private static int NUMBER_OF_GENERATIONS = 2000;
     private static double MUTATION_RATE = 0.1; // Mutation percentage
     private static Random random = new Random();
     
@@ -28,7 +30,7 @@ public class Running {
     private static int DRAW_POINTS = 1;
     private static int LOSE_POINTS = 0;
 
-     
+    
     // Persistance variables 
     private static String file_name = new String("");
     private static GraphGenerator fitnessGraph = new GraphGenerator("Fitness x Generations");
@@ -36,7 +38,7 @@ public class Running {
     private static boolean fitGraphClosed = false;
 	private static boolean statsGraphClosed = false;
     
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         // OBJECTS
         // Generate the board/position representations
@@ -53,7 +55,28 @@ public class Running {
         for (int i=0; i<Running.OPPONENTS_AMOUNT; i++){
             opponents.add(new ArrayPlayer(representation));
         }
-      
+
+        // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
+        // File to output oponents.
+        /*
+        FileOutputStream opponentsFile = new FileOutputStream("opponents.ser");
+        ObjectOutputStream out = new ObjectOutputStream(opponentsFile);
+        int opponentsWritten = 0;
+        */
+        
+        // Uncomment for evolved opponents:
+        FileInputStream opponentsIn = new FileInputStream("opponents.ser");
+        ObjectInputStream in = new ObjectInputStream(opponentsIn);
+
+        try {
+            ArrayPlayer e;
+			while( (e= (ArrayPlayer)in.readObject()) != null) {
+            	opponents.add(e);
+            }
+        } catch (IOException ioex){
+        	ioex.printStackTrace();
+        }
+
         // Create XYSeries for graphs:
         fitnessGraph.createSeries("Max Fitness");
         fitnessGraph.createSeries("Average Fitness");
@@ -64,7 +87,6 @@ public class Running {
         statsGraph.createSeries("Best Player's Draws");
         statsGraph.createSeries("Best Player's Losses");
         statsGraph.createSeries("Max Number of Wins");
-
 
         // Generate first generation        
         System.out.println("Generating first generation!");
@@ -78,6 +100,7 @@ public class Running {
 
 
         for (int i=0; i<Running.NUMBER_OF_GENERATIONS; i++) {
+        	
         	
         	// EVALUATION METRICS
     		int MAX_FITNESS = 0;
@@ -176,7 +199,22 @@ public class Running {
             
     		// After everyone played their games, sort based on fitness and breed the best.
     		players.sort(null);
-
+    		
+        	if (i%(Running.NUMBER_OF_GENERATIONS/20) == 0) {
+        		System.out.println("Geracao: " + i);
+                // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
+        		/*
+        		// ops determine the number of opponents of a generation to be saved
+                for (int ops = 0; ops < 5; ops++){
+                    try{
+                        out.writeObject(players.get(ops));
+                        opponentsWritten++;
+                    } catch (IOException ioex){
+                        ioex.printStackTrace();
+                    }
+                }*/
+        	}
+    		
     		
     		double[] fit_array = {MAX_FITNESS, AVG_FITNESS}; 
     		fitnessGraph.addValue((double) i, fit_array);
@@ -196,11 +234,14 @@ public class Running {
     			if (parent > allowedToBreed -1)
     				parent = 0;
     		}
-    		int aefaef=0;
-    		aefaef++;
         } // Generations loop end
         
-     
+        // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
+        /*
+        System.out.println("Opponents written: " + opponentsWritten);
+        out.close();
+        opponentsFile.close();
+        */
         
         fitnessGraph.generateGraph("Fitness");
         fitnessGraph.pack();
@@ -238,14 +279,11 @@ public class Running {
 		}
         
         statsGraph.savePNGFile(file_name + "Stats_" + "P" + Running.POPULATION_SIZE + "A" + Running.ALLOWED_BREED + "G" + Running.NUMBER_OF_GENERATIONS + "M" + Running.MUTATION_RATE + "OP" + Running.OPPONENTS_AMOUNT);
-       while(true) {
+        while(true) {
     	   if(statsGraphClosed && fitGraphClosed) {
     		   System.out.println("Ate mais e obrigado pelos peixes");
     		   System.exit(0);
     	   }
        }
-       
-       
-       
 	} // Main end
 } // Class end

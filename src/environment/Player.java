@@ -1,8 +1,9 @@
 package environment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Player implements Comparable {
+public abstract class Player implements Comparable, Serializable {
 	protected static int id;
 	protected ArrayList<String> plays;
 	protected int playerId;
