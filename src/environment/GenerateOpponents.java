@@ -13,21 +13,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Running {
+public class GenerateOpponents {
 	
 	// Environment variables
     private static final int POPULATION_SIZE = 100;
-    private static final double ALLOWED_BREED = 0.3; // Parents percentage
-    private static final int NUMBER_OF_GENERATIONS = 200;
-    private static final double PROGRESS_STEP = 5; // Show progress in NUMBER_OF_GENERATIONS / PROGRESS STEP. Also save opponents in same step
+    private static final double ALLOWED_BREED = 0.30; // Parents percentage
+    private static final int NUMBER_OF_GENERATIONS = 2000;
+    private static final double PROGRESS_STEP = 20; // Show progress in NUMBER_OF_GENERATIONS / PROGRESS STEP. Also save opponents in same step
     private static final int SAVED_OPPONENTS_NUMBER = 5;
-    private static final boolean USE_RANDOM = true; // Use random opponents?
+    private static boolean USE_RANDOM = true; // Use random opponents?
     private static final double MUTATION_RATE = 0.1; // Mutation percentage
     private static final int NUMBER_OF_SAMPLES = 5;
     private static Random random = new Random();
     
     // Tourney definitions
-    private static final int OPPONENTS_AMOUNT = 1; // Plays an opponent twice. Putting first piece/not putting first piece.
+    private static final int OPPONENTS_AMOUNT = 10; // Plays an opponent twice. Putting first piece/not putting first piece.
     private static final int WIN_POINTS = 3;
     private static final int DRAW_POINTS = 1;
     private static final int LOSE_POINTS = 0;
@@ -36,25 +36,18 @@ public class Running {
     private static String file_name = new String("");
     private static GraphGenerator fitnessGraph;
     private static GraphGenerator statsGraph;
-    private static boolean[] fitGraphClosed = new boolean[Running.NUMBER_OF_SAMPLES];
-	private static boolean[] statsGraphClosed = new boolean[Running.NUMBER_OF_SAMPLES];
+    private static boolean fitGraphClosed = false;
+	private static boolean statsGraphClosed = false;
     
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		
-		Arrays.fill(fitGraphClosed, false);
-		Arrays.fill(statsGraphClosed, false);
 
         // OBJECTS
         // Generate the board/position representations
 		Representation representation = new Representation();
 		
-		// Save configurations to name the files
-        String configs = new String("P" + Running.POPULATION_SIZE + "A" + Running.ALLOWED_BREED + "G" + Running.NUMBER_OF_GENERATIONS + "M" + Running.MUTATION_RATE + "OP" + Running.OPPONENTS_AMOUNT);
-		
 		// Save best players from each run to compare them. See how much they differ:
-        FileOutputStream bestPlayersFile = new FileOutputStream(configs + "_best.ser");
+        FileOutputStream bestPlayersFile = new FileOutputStream("best.ser");
         ObjectOutputStream bestOut = new ObjectOutputStream(bestPlayersFile);
-        
 
         // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
         // File to output opponents.
@@ -64,7 +57,7 @@ public class Running {
         int opponentsWritten = 0;
         */
         
-	   for(int h=0; h < Running.NUMBER_OF_SAMPLES; h++) {
+	   for(int h=0; h < GenerateOpponents.NUMBER_OF_SAMPLES; h++) {
 
 		   	// GRAPHS VARIABLES
 		   	file_name = "Sample" + (h+1);
@@ -93,11 +86,12 @@ public class Running {
 	        System.out.println("Generating benchmark players");
 	        ArrayList<Player> opponents = new ArrayList<Player>();
 	        
-	        if (Running.USE_RANDOM) {
+	        if (GenerateOpponents.USE_RANDOM) {
 		        // Generating random opponents:
-		        for (int i=0; i<Running.OPPONENTS_AMOUNT; i++){
+		        for (int i=0; i<GenerateOpponents.OPPONENTS_AMOUNT; i++){
 		            opponents.add(new ArrayPlayer(representation));
 		        }
+		        GenerateOpponents.USE_RANDOM = false;
 	        } else {
 		        // Uncomment for evolved opponents:
 		        FileInputStream opponentsIn = new FileInputStream("opponents.ser");
@@ -117,13 +111,13 @@ public class Running {
 	      
 	        // Generate first generation        
 	        System.out.println("Generating first generation!");
-	        for (int i=0; i<Running.POPULATION_SIZE; i++){
+	        for (int i=0; i<GenerateOpponents.POPULATION_SIZE; i++){
 	            players.add(new ArrayPlayer(representation));
 	        }
 		   
 	        // - - - - - BEGINING OF GENERATIONS - - - - -
 		   
-	        for (int i=0; i<Running.NUMBER_OF_GENERATIONS; i++) {
+	        for (int i=0; i<GenerateOpponents.NUMBER_OF_GENERATIONS; i++) {
 	        	
 	        	// EVALUATION METRICS
 	    		int MAX_FITNESS = 0;
@@ -132,12 +126,12 @@ public class Running {
 	            int numWinsBestPlayer = 0;
 	            int numDrawsBestPlayer = 0;
 	            int numLossesBestPlayer = 0;
-	            double avgWins = 0;
-	            double avgDraws = 0;
-	            double avgLosses = 0;
+	            int avgWins = 0;
+	            int avgDraws = 0;
+	            int avgLosses = 0;
 	
 	        	// Each player plays in a tourney to determine fitness
-	        	for (int j=0; j<Running.POPULATION_SIZE; j++) {
+	        	for (int j=0; j<GenerateOpponents.POPULATION_SIZE; j++) {
 	        		Player tourneyPlayer = players.get(j);
 	
 	                // Zero previous status
@@ -154,34 +148,34 @@ public class Running {
 	
 	        		char[] emptyboard = new char[9];
 	        		Arrays.fill(emptyboard, '0');
-	        		for (int k=0; k<Running.OPPONENTS_AMOUNT; k++) {
+	        		for (int k=0; k<GenerateOpponents.OPPONENTS_AMOUNT; k++) {
 	        			//System.out.println("Primeira jogada do jogador " + tourneyPlayer.getId() + " eh " + tourneyPlayer.getNextPlay(representation, emptyboard));
 	        			//System.out.println("Primeira jogada do jogador " + opponent.getId() + " eh " + opponent.getNextPlay(representation, emptyboard));
-	        			// Player opponent = players.get(random.nextInt(Running.POPULATION_SIZE)); uncomment this line to coevolutive
+	        			// Player opponent = players.get(random.nextInt(GenerateOpponents.POPULATION_SIZE)); uncomment this line to coevolutive
 	        			Game game = new Game(tourneyPlayer, opponents.get(k), representation);
 	                    int winner = game.play();
 	                    //System.out.println("Ganhador do jogo entre " + tourneyPlayer.getId() + " e " + opponent.getId() + " foi: " + winner);
 	        			if (winner == tourneyPlayer.getId()) {
-	        				newFitness += Running.WIN_POINTS;
+	        				newFitness += GenerateOpponents.WIN_POINTS;
 	                        newWins++;
 	        			} else if (winner == -1) {
-	        				newFitness += Running.DRAW_POINTS;
+	        				newFitness += GenerateOpponents.DRAW_POINTS;
 	                        newDraws++;
 	        			} else {
-	        				newFitness += Running.LOSE_POINTS;
+	        				newFitness += GenerateOpponents.LOSE_POINTS;
 	                        newLosses++;
 	        			}
 	        			game = new Game(opponents.get(k), tourneyPlayer, representation);
 	        			winner = game.play();
 	        			//System.out.println("Ganhador do jogo entre " + opponent.getId() + " e " + tourneyPlayer.getId() + " foi: " + winner);
 	        			if (winner == tourneyPlayer.getId()) {
-	        				newFitness += Running.WIN_POINTS;
+	        				newFitness += GenerateOpponents.WIN_POINTS;
 	                        newWins++;
 	        			} else if (winner == -1) {
-	        				newFitness += Running.DRAW_POINTS;
+	        				newFitness += GenerateOpponents.DRAW_POINTS;
 	                        newDraws++;
 	        			} else {
-	        				newFitness += Running.LOSE_POINTS;
+	        				newFitness += GenerateOpponents.LOSE_POINTS;
 	                        newLosses++;
 	        			}
 	        		}
@@ -214,21 +208,21 @@ public class Running {
 	                avgLosses += newLosses;
 	        	}
 	
-	        	AVG_FITNESS /= Running.POPULATION_SIZE;
-	            avgWins /= Running.POPULATION_SIZE;
-	            avgDraws /= Running.POPULATION_SIZE;
-	            avgLosses /= Running.POPULATION_SIZE;
+	        	AVG_FITNESS /= GenerateOpponents.POPULATION_SIZE;
+	            avgWins /= GenerateOpponents.POPULATION_SIZE;
+	            avgDraws /= GenerateOpponents.POPULATION_SIZE;
+	            avgLosses /= GenerateOpponents.POPULATION_SIZE;
 	        	
 	            
 	    		// After everyone played their games, sort based on fitness and breed the best.
 	    		players.sort(null);
 	    		
-	        	if (i%(Running.NUMBER_OF_GENERATIONS/Running.PROGRESS_STEP) == 0) {
+	        	if (i%(GenerateOpponents.NUMBER_OF_GENERATIONS/GenerateOpponents.PROGRESS_STEP) == 0) {
 	        		System.out.println("Geracao: " + i);
 	                // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
 	        		/*
 	        		// ops determine the number of opponents of a generation to be saved
-	                for (int ops = 0; ops < Running.SAVED_OPPONENTS_NUMBER; ops++){
+	                for (int ops = 0; ops < GenerateOpponents.SAVED_OPPONENTS_NUMBER; ops++){
 	                    try{
 	                        out.writeObject(players.get(ops));
 	                        opponentsWritten++;
@@ -247,11 +241,11 @@ public class Running {
 	    		
 	    		// Select %ALLOWED_BREED parents to breed and fill the remainder of the population
 	    		int parent = 0;
-	    		int allowedToBreed = (int) (Running.POPULATION_SIZE * Running.ALLOWED_BREED);
-	    		for (int b = allowedToBreed; b < Running.POPULATION_SIZE; b++) {
+	    		int allowedToBreed = (int) (GenerateOpponents.POPULATION_SIZE * GenerateOpponents.ALLOWED_BREED);
+	    		for (int b = allowedToBreed; b < GenerateOpponents.POPULATION_SIZE; b++) {
 	    			// Parent one is determined. Parent two is random from the allowed to breed ones.
 	    			// TODO: Decrease changes from parent two according to arraylist index.
-	    			Player newPlayer = new ArrayPlayer(representation, (ArrayPlayer) players.get(parent), (ArrayPlayer) players.get(random.nextInt(allowedToBreed)), Running.MUTATION_RATE, random);
+	    			Player newPlayer = new ArrayPlayer(representation, (ArrayPlayer) players.get(parent), (ArrayPlayer) players.get(random.nextInt(allowedToBreed)), GenerateOpponents.MUTATION_RATE, random);
 	    			players.set(b, newPlayer);
 	    			parent++;
 	    			if (parent > allowedToBreed -1)
@@ -267,6 +261,9 @@ public class Running {
 	    		
 	        } // Generations loop end
 	        
+	        // Save configurations to name the files
+	        String configs = new String("P" + GenerateOpponents.POPULATION_SIZE + "A" + GenerateOpponents.ALLOWED_BREED + "G" + GenerateOpponents.NUMBER_OF_GENERATIONS + "M" + GenerateOpponents.MUTATION_RATE + "OP" + GenerateOpponents.OPPONENTS_AMOUNT);
+	        
 	        // Save the best chromossome from each run to compare them. See how much they differ.
             try{
                 bestOut.writeObject( ((ArrayPlayer) players.get(0)).getPlaybook() );
@@ -274,14 +271,17 @@ public class Running {
                 ioex.printStackTrace();
             }
             
-            final int num = h;
+            bestOut.close();
+            bestPlayersFile.close();
+            
+            
 	        // Generate graphs
 	        fitnessGraph.generateGraph("Fitness");
 	        fitnessGraph.pack();
 	        fitnessGraph.addWindowListener(new WindowAdapter() {
 	        	@Override
 				public void windowClosing(WindowEvent e) {
-	        		fitGraphClosed[num] = true;
+	        		fitGraphClosed = true;
 	        	}
 	        });
 	        fitnessGraph.setVisible(true);
@@ -294,14 +294,14 @@ public class Running {
 			}
 	        
 	        
-	        fitnessGraph.savePNGFile(configs + file_name + "fit");
+	        fitnessGraph.savePNGFile(file_name + configs);
 	        
 	        statsGraph.generateGraph("Statistics");
 	        statsGraph.pack();
 	        statsGraph.addWindowListener(new WindowAdapter() {
 	        	@Override
 				public void windowClosing(WindowEvent e) {
-	        		statsGraphClosed[num] = true;
+	        		statsGraphClosed = true;
 	        	}
 	        });
 	        statsGraph.setVisible(true);
@@ -312,24 +312,17 @@ public class Running {
 				e.printStackTrace();
 			}
 	        
-	        statsGraph.savePNGFile(configs + file_name + "stats");
-	   
+	        statsGraph.savePNGFile(file_name + configs);
+	    
+	        fitnessGraph = null;
+	        statsGraph = null;
        } // Samples loop end
 	   
 	    while(true) {
-	    	boolean allClosed = false;
-	    	for(int samples = 0; samples<Running.NUMBER_OF_SAMPLES; samples++) {
-	    		allClosed = statsGraphClosed[samples];
-	    		if (allClosed == false) break;
-	    		allClosed = fitGraphClosed[samples];
-	    		if (allClosed == false) break;
-	    	}
-    	   if(allClosed) {
-               bestOut.close();
-               bestPlayersFile.close();
-    		   System.out.println("Ate mais e obrigado pelos peixes");
-    		   System.exit(0);
-    	   } 
+	    	   if(statsGraphClosed && fitGraphClosed) {
+	    		   System.out.println("Ate mais e obrigado pelos peixes");
+	    		   System.exit(0);
+	    	   } 
  	   }
 	} // Main end
 } // Class end
