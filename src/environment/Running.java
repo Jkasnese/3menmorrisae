@@ -18,7 +18,7 @@ public class Running {
 	// Environment variables
     private static final int POPULATION_SIZE = 100;
     private static double ALLOWED_BREED = 0.01; // Parents percentage
-    private static final int NUMBER_OF_GENERATIONS = 200;
+    private static final int NUMBER_OF_GENERATIONS = 2000;
     private static final double PROGRESS_STEP = 0; // Show progress in NUMBER_OF_GENERATIONS / PROGRESS STEP. Also save opponents in same step
     private static final int SAVED_OPPONENTS_NUMBER = 5;
     private static final boolean USE_RANDOM = true; // Use random opponents?
