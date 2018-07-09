@@ -66,7 +66,7 @@ public class GraphGenerator extends JFrame{
 		this.graph = ChartFactory.createXYLineChart("", "Generations", y_axis_title, data, PlotOrientation.VERTICAL, true, true, false);
 		
 		XYPlot plot = graph.getXYPlot();
-		
+
 		ValueAxis yAxis = plot.getRangeAxis();
 		
 		ValueAxis xAxis = plot.getDomainAxis();
@@ -74,6 +74,11 @@ public class GraphGenerator extends JFrame{
 		Font font = new Font("Dialog", Font.PLAIN, 30);
 		yAxis.setTickLabelFont(font);
 		xAxis.setTickLabelFont(font);
+		
+		renderer.setBaseLegendTextFont(font);
+		
+		plot.getDomainAxis().setLabelFont(font);
+		plot.getRangeAxis().setLabelFont(font);
 		
 		plot.setOutlinePaint(Color.BLACK);
 		plot.setRenderer(renderer);
@@ -83,7 +88,7 @@ public class GraphGenerator extends JFrame{
 		
 		plot.setDomainGridlinesVisible(false);
 		
-	
+		
 		final ChartPanel chartPanel = new ChartPanel(graph);
 		chartPanel.setPreferredSize(new java.awt.Dimension(1920, 1080));
 		setContentPane(chartPanel);

@@ -23,7 +23,7 @@ public class Running {
     private static final int SAVED_OPPONENTS_NUMBER = 5;
     private static final boolean USE_RANDOM = true; // Use random opponents?
     private static final double MUTATION_RATE = 0.1; // Mutation percentage
-    private static final int NUMBER_OF_SAMPLES = 5;
+    private static final int NUMBER_OF_SAMPLES = 1;
     private static Random random = new Random();
     
     // Tourney definitions
