@@ -77,7 +77,7 @@ public class ArrayPlayer extends Player implements Serializable {
 		// Get next play from player`s playbook from previous index
 		return this.playbook.get(playIndex);
 	}
-	
+	// Uncomment to normal evolution
 	@Override
 	public int compareTo(Object opponent) {
 		opponent = (Player) opponent;
@@ -90,4 +90,21 @@ public class ArrayPlayer extends Player implements Serializable {
 			return 0;
 		}
 	}
+	
+	// Uncomment to coevolution
+	/*
+	@Override
+	public int compareTo(Object opponent) {
+		opponent = (Player) opponent;
+		if (this.coevoFitness > ((Player) opponent).coevoFitness) {
+			return -1;
+		}
+		else if (this.coevoFitness < ((Player) opponent).coevoFitness ) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+	*/
+	
 }

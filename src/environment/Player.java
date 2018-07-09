@@ -11,6 +11,11 @@ public abstract class Player implements Comparable, Serializable {
 	protected int wins;
 	protected int draws;
 	protected int losses;
+	// Coevolution stats:
+	protected int coevoFitness;
+	protected int coevoWins;
+	protected int coevoDraws;
+	protected int coevoLosses;
 	
 	public abstract String getNextPlay(Representation representation, char[] board);
 

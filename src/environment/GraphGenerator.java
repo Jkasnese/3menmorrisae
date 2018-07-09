@@ -72,10 +72,11 @@ public class GraphGenerator extends JFrame{
 		ValueAxis xAxis = plot.getDomainAxis();
 		
 		Font font = new Font("Dialog", Font.PLAIN, 30);
+		Font legendFont = new Font("Dialog", Font.PLAIN, 26);
 		yAxis.setTickLabelFont(font);
 		xAxis.setTickLabelFont(font);
 		
-		renderer.setBaseLegendTextFont(font);
+		renderer.setBaseLegendTextFont(legendFont);
 		
 		plot.getDomainAxis().setLabelFont(font);
 		plot.getRangeAxis().setLabelFont(font);
