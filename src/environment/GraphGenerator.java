@@ -2,6 +2,7 @@ package environment;
 
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileOutputStream;
@@ -17,6 +18,8 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -64,6 +67,13 @@ public class GraphGenerator extends JFrame{
 		
 		XYPlot plot = graph.getXYPlot();
 		
+		ValueAxis yAxis = plot.getRangeAxis();
+		
+		ValueAxis xAxis = plot.getDomainAxis();
+		
+		Font font = new Font("Dialog", Font.PLAIN, 30);
+		yAxis.setTickLabelFont(font);
+		xAxis.setTickLabelFont(font);
 		
 		plot.setOutlinePaint(Color.BLACK);
 		plot.setRenderer(renderer);
