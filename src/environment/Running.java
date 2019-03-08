@@ -17,11 +17,11 @@ public class Running {
 	
 	// Environment variables
     private static final int POPULATION_SIZE = 100;
-    private static double ALLOWED_BREED = 0.01; // Parents percentage
-    private static final int NUMBER_OF_GENERATIONS = 2000;
+    private static final double ALLOWED_BREED = 0.3; // Parents percentage
+    private static final int NUMBER_OF_GENERATIONS = 200;
     private static final double PROGRESS_STEP = 0; // Show progress in NUMBER_OF_GENERATIONS / PROGRESS STEP. Also save opponents in same step
     private static final int SAVED_OPPONENTS_NUMBER = 5;
-    private static final boolean USE_RANDOM = true; // Use random opponents?
+    private static final boolean USE_RANDOM = false; // Use random opponents?
     private static final double MUTATION_RATE = 0.1; // Mutation percentage
     private static final int NUMBER_OF_SAMPLES = 10;
     private static Random random = new Random();
@@ -73,7 +73,7 @@ public class Running {
 	            opponents.add(new ArrayPlayer(representation));
 	        }
         } else {
-	        // Uncomment for evolved opponents:
+	        // Load evolved opponents:
 	        FileInputStream opponentsIn = new FileInputStream("opponents.ser");
 	        ObjectInputStream in = new ObjectInputStream(opponentsIn);
 	        int opponentsRead = 0;
@@ -100,7 +100,8 @@ public class Running {
             newPlayers.add(new ArrayPlayer(representation));
         }
         
-	   for(int h=0; h < Running.NUMBER_OF_SAMPLES; h++) {
+        // Run experiments samples based on NUMBER_OF_SAMPLES
+	    for(int h=0; h < Running.NUMBER_OF_SAMPLES; h++) {
 
 		   	// GRAPHS VARIABLES
 		   	file_name = "Sample" + (h+1);
@@ -108,7 +109,7 @@ public class Running {
 	      	fitnessGraph = new GraphGenerator("Fitness x Generations");
 	      	statsGraph = new GraphGenerator("Statistics x Generations");
       	 
-		   // Create XYSeries for graphs:
+		    // Create XYSeries for graphs:
 	        fitnessGraph.createSeries("Max Fitness");
 	        fitnessGraph.createSeries("Average Fitness");
 	        statsGraph.createSeries("Average Wins");
@@ -143,7 +144,7 @@ public class Running {
 	        	for (int j=0; j<Running.POPULATION_SIZE; j++) {
 	        		Player tourneyPlayer = players.get(j);
 	
-	                // Zero previous status
+	                // Reset status from previous generation
 	        		tourneyPlayer.setFitness(0); // Reset fitness from previous tourneys
 	                tourneyPlayer.wins = 0;
 	                tourneyPlayer.draws = 0;
@@ -157,7 +158,7 @@ public class Running {
 	
 
 	        		for (int k=0; k<Running.OPPONENTS_AMOUNT; k++) {
-	        			// Player opponent = players.get(random.nextInt(Running.POPULATION_SIZE)); uncomment this line to coevolutive
+
 	        			Game game = new Game(tourneyPlayer, opponents.get(k), representation);
 	                    int winner = game.play();
 	                    //System.out.println("Ganhador do jogo entre " + tourneyPlayer.getId() + " e " + opponent.getId() + " foi: " + winner);
@@ -271,8 +272,9 @@ public class Running {
                 ioex.printStackTrace();
             }
             
+
+            // Generate graphs
             final int num = h;
-	        // Generate graphs
 	        fitnessGraph.generateGraph("Fitness");
 	        fitnessGraph.pack();
 	        fitnessGraph.addWindowListener(new WindowAdapter() {
@@ -313,6 +315,7 @@ public class Running {
 	        Running.ALLOWED_BREED += 0.10;
        } // Samples loop end
 	   
+	    // Closing proceedure (Eclipse wasn't closing the runs/graphs properly. Can't remember why this is here)
 	    while(true) {
 	    	boolean allClosed = false;
 	    	for(int samples = 0; samples<Running.NUMBER_OF_SAMPLES; samples++) {
