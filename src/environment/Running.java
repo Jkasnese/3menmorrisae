@@ -17,9 +17,9 @@ public class Running {
 	
 	// Environment variables
     private static final int POPULATION_SIZE = 100;
-    private static final double ALLOWED_BREED = 0.3; // Parents percentage
+    private static double ALLOWED_BREED = 0.3; // Parents percentage
     private static final int NUMBER_OF_GENERATIONS = 200;
-    private static final double PROGRESS_STEP = 0; // Show progress in NUMBER_OF_GENERATIONS / PROGRESS STEP. Also save opponents in same step
+    private static final double PROGRESS_STEP = 500; // Show progress in NUMBER_OF_GENERATIONS / PROGRESS STEP. Also save opponents in same step
     private static final int SAVED_OPPONENTS_NUMBER = 5;
     private static final boolean USE_RANDOM = false; // Use random opponents?
     private static final double MUTATION_RATE = 0.1; // Mutation percentage
@@ -221,7 +221,8 @@ public class Running {
 	    		// After everyone played their games, sort based on fitness and breed the best.
 	    		players.sort(null);
 	    		
-	        	if (i%(Running.NUMBER_OF_GENERATIONS/Running.PROGRESS_STEP) == 0) {
+	    		
+	        	if (i%Running.PROGRESS_STEP == 0) {
 	        		System.out.println("Geracao: " + i);
 	                // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
 	        		/*
@@ -233,8 +234,10 @@ public class Running {
 	                    } catch (IOException ioex){
 	                        ioex.printStackTrace();
 	                    }
-	                }*/
+	                }
+	                */  
 	        	}
+	        	
 	    		
 	    		
 	    		double[] fit_array = {MAX_FITNESS, AVG_FITNESS}; 
@@ -255,16 +258,15 @@ public class Running {
 	    			if (parent > allowedToBreed -1)
 	    				parent = 0;
 	    		}
-	    		
-	    		// If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
-	            /*
-	            System.out.println("Opponents written: " + opponentsWritten);
-	            out.close();
-	            opponentsFile.close();
-	            */
-	    		
 	        } // Generations loop end
 	        
+     	    // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
+            /*
+    		//System.out.println("Opponents written: " + opponentsWritten);
+            out.close();
+            opponentsFile.close();
+	        */
+	    
 	        // Save the best chromossome from each run to compare them. See how much they differ.
             try{
                 bestOut.writeObject( ((ArrayPlayer) players.get(0)).getPlaybook() );

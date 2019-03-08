@@ -64,7 +64,7 @@ public class Game {
 	public int play(){
 		//System.out.println("Jogo entre jogador " + this.player_one.getId() + " e " + this.player_two.getId());
 		for (int i=0; i<Game.NUMBER_OF_PLAYS; i++){
-			System.out.println("Jogada jogador 1");
+			//System.out.println("Jogada jogador 1");
 			String newBoard = this.player_one.getNextPlay(this.representation, this.board);
 			
 			// If he has no available plays, he lost.
@@ -78,11 +78,11 @@ public class Game {
 			if (this.is_game_finished()) 
 				return this.player_one.getId();
 			
-			System.out.println(new String(this.board));
+			//System.out.println(new String(this.board));
 			
 			swap_board();
 
-			System.out.println("Jogada jogador 2");
+			//System.out.println("Jogada jogador 2");
 			newBoard = this.player_two.getNextPlay(this.representation, this.board);
 			
 			// If he has no available plays, he lost.
@@ -96,7 +96,7 @@ public class Game {
 			if (this.is_game_finished()) 
 				return this.player_two.getId();
 
-			System.out.println(new String(this.board));
+			//System.out.println(new String(this.board));
 			
 			swap_board();
 		}

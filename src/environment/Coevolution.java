@@ -18,20 +18,21 @@ public class Coevolution {
 	// Environment variables
     private static final int POPULATION_SIZE = 100;
     private static final double ALLOWED_BREED = 0.3; // Parents percentage
-    private static final int NUMBER_OF_GENERATIONS = 200;
-    private static final double PROGRESS_STEP = 0; // Show progress in NUMBER_OF_GENERATIONS / PROGRESS STEP. Also save opponents in same step
-    private static final int SAVED_OPPONENTS_NUMBER = 5;
+    private static final int NUMBER_OF_GENERATIONS = 2001;
+    private static final double PROGRESS_STEP = 2000; // Show progress in NUMBER_OF_GENERATIONS / PROGRESS STEP. Also save opponents in same step
+    private static final int SAVED_OPPONENTS_NUMBER = 100;
+    private static final int SAVED_BEST_NUMBER = 100;
     private static final boolean USE_RANDOM = true; // Use random opponents?
     private static final double MUTATION_RATE = 0.1; // Mutation percentage
-    private static final int NUMBER_OF_SAMPLES = 5;
+    private static final int NUMBER_OF_SAMPLES = 1;
     private static Random random = new Random();
     
     // Tourney definitions
     private static final int OPPONENTS_AMOUNT = 100; // Plays an opponent twice. Putting first piece/not putting first piece. Used only to benchmark.
-    private static final int COEVOLUTION_OPPONENTS_AMOUNT = 5; // Number of players from the population that a player will play against to determine fitness.
+    private static final int COEVOLUTION_OPPONENTS_AMOUNT = 100; // Number of players from the population that a player will play against to determine fitness.
     private static final int WIN_POINTS = 3;
     private static final int DRAW_POINTS = 1;
-    private static final int LOSE_POINTS = 0;
+    private static final int LOSE_POINTS = -1000;
 
     // Persistance variables 
     private static String file_name = new String("");
@@ -50,7 +51,7 @@ public class Coevolution {
         String configs = new String("P" + Coevolution.POPULATION_SIZE + "A" + Coevolution.ALLOWED_BREED + "G" + Coevolution.NUMBER_OF_GENERATIONS + "M" + Coevolution.MUTATION_RATE + "OP" + Coevolution.OPPONENTS_AMOUNT);
 		
 		// Save best players from each run to compare them. See how much they differ:
-        FileOutputStream bestPlayersFile = new FileOutputStream(configs + "_best.ser");
+        FileOutputStream bestPlayersFile = new FileOutputStream(configs + "__coevo_best.ser");
         ObjectOutputStream bestOut = new ObjectOutputStream(bestPlayersFile);
         
         // If this is a run to generate an opponent pool, uncomment the following lines between /* -- */: CTRL + F to find other lines to uncomment
@@ -370,11 +371,14 @@ public class Coevolution {
 	        } // Generations loop end
 	        
 	        // Save the best chromossome from each run to compare them. See how much they differ.
-            try{
-                bestOut.writeObject( ((ArrayPlayer) players.get(0)).getPlaybook() );
-            } catch (IOException ioex){
-                ioex.printStackTrace();
-            }
+	        for (int coevos =0; coevos < SAVED_BEST_NUMBER ; ++coevos) {
+	        	try{
+                bestOut.writeObject( ((ArrayPlayer) players.get(coevos)) );
+	            } catch (IOException ioex){
+	                ioex.printStackTrace();
+	            }	
+	        }
+            
             
 	        // Generate graphs
 	        coevoFitnessGraph.generateGraph("Fitness");
@@ -430,6 +434,7 @@ public class Coevolution {
 	        
 	        statsGraph.savePNGFile(configs + file_name + "stats");
 	   
+	   		System.out.println("Acabou.");
        } // Samples loop end
 	} // Main end
 } // Class end
